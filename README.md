@@ -34,7 +34,7 @@ Ou adicione o flake à sua configuração.
 
 ### Windows — instalador .exe
 
-*Em breve*
+Vá na aba de releases e baixe! ja está disponivel.
 
 ### Arch Linux — AUR
 
