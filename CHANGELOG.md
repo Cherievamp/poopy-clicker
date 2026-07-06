@@ -62,6 +62,13 @@
 
 ---
 
+## v1.0.1 (2026-07-06)
+
+### 🐛 Correções
+- Corrigido `build-backend` no `pyproject.toml` (`setuptools.backends._legacy` → `setuptools.build_meta`) para instalação com versões recentes do setuptools/Python 3.14
+
+---
+
 ## Anterior (fork original — por Julia-Link)
 
 ### Última versão (`Julia-Link/poopy-clicker`)
