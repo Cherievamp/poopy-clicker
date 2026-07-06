@@ -2,6 +2,7 @@ import os
 import random
 import time
 import math
+from collections import deque
 from PyQt6.QtWidgets import (
     QWidget, QPushButton, QLabel, QDialog, QProgressBar,
     QVBoxLayout, QHBoxLayout, QGridLayout, QScrollArea,
@@ -215,6 +216,8 @@ class Game(QWidget):
 
         self._click_tick = 0
         self._last_click_tick = -1
+        self._last_clicks = deque()
+        self._orig_stylesheets = {}
         self._skill_frenzy_active = False
         self._skill_shield_active = False
         self._skill_coinburst_active = False
@@ -256,10 +259,10 @@ class Game(QWidget):
         for w in (self.label, self.auto_label, self.combo_label,
                   self.goober_label, self.prestige_label,
                   self.mission_label, self.essence_label):
-            w.setStyleSheet(
-                f"background: {theme['panel']}; border-radius: 12px; "
-                f"padding: 8px; color: {theme['text']};"
-            )
+            ss = (f"background: {theme['panel']}; border-radius: 12px; "
+                  f"padding: 8px; color: {theme['text']};")
+            self._orig_stylesheets[w] = ss
+            w.setStyleSheet(ss)
 
     def _style_buttons(self):
         theme = UI_THEMES.get(self.state.selected_ui_theme, UI_THEMES["default"])
@@ -303,7 +306,15 @@ class Game(QWidget):
 
     def update_ui(self):
         self.label.setText(f"voce tem ${format_number(self.state.count)}!")
-        self.auto_label.setText(f"{format_number(self.state.get_auto_value())}/s")
+        now = time.time()
+        while self._last_clicks and now - self._last_clicks[0] > 1.0:
+            self._last_clicks.popleft()
+        manual_cps = len(self._last_clicks)
+        auto_val = self.state.get_auto_value()
+        if auto_val > 0:
+            self.auto_label.setText(f"{format_number(manual_cps)} + {format_number(auto_val)}/s")
+        else:
+            self.auto_label.setText(f"{format_number(manual_cps)}/s")
 
         if self.state.secret_shop_unlocked:
             self.goober_label.setText(f"🪙 {format_number(self.state.goober_coins)} gc")
@@ -1735,7 +1746,7 @@ class Game(QWidget):
         self.update_ui()
 
     def _flash_label(self, label, color="#4CAF50"):
-        orig = label.styleSheet()
+        orig = self._orig_stylesheets.get(label, label.styleSheet())
         label.setStyleSheet(f"color: {color}; font-weight: bold;")
         QTimer.singleShot(150, lambda l=label, o=orig: l.setStyleSheet(o))
 
@@ -1763,6 +1774,7 @@ class Game(QWidget):
 
         self.sound.play("click_combo" if self.state.combo_count >= 5 else "click")
         self._flash_label(self.label)
+        self._last_clicks.append(time.time())
         self.update_ui()
         self.move_click_button_randomly()
         self._click_tick += 1

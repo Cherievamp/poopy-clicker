@@ -72,6 +72,14 @@
 
 ---
 
+## v1.0.2 (2026-07-06)
+
+### 🐛 Correções
+- Corrigido `_flash_label` — race condition ao clicar rápido causava perda do estilo original dos labels (UI "mudava")
+- CPS agora mostra cliques manuais por segundo (`N/s`), somando auto quando disponível (`M + N/s`)
+
+---
+
 ## Anterior (fork original — por Julia-Link)
 
 ### Última versão (`Julia-Link/poopy-clicker`)
