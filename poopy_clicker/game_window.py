@@ -825,7 +825,7 @@ class Game(QWidget):
         self._refresh_perks_tab()
 
     def _make_prestige_tab(self):
-        from constants import PRESTIGE_MILESTONES
+        from .constants import PRESTIGE_MILESTONES
         theme = UI_THEMES.get(self.state.selected_ui_theme, UI_THEMES["default"])
         w = QWidget()
         w.setStyleSheet(f"background: {theme['panel']};")
