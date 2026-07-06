@@ -43,4 +43,4 @@ Ou adicione o flake à sua configuração.
 ## Créditos
 
 - **Mafuzy** — desenvolvimento principal, reescrita PyQt6, mecânicas, assets, som, packaging
-- **Julia_Link** — criação do jogo original em Tkinter, conceito inicial, contribuição no código PyQt6
+- **Julia_Link** — desenvolvimento principal, criação do jogo original em Tkinter, conceito inicial, contribuição no código PyQt6
