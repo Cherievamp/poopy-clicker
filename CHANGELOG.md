@@ -84,6 +84,7 @@
 
 ### ✨ Novidades
 - **Auto-update**: ao iniciar, o jogo checa se há versão mais nova no GitHub e exibe um diálogo com link pra download
+- Conquistas agora aparecem como **toast in-game** (dentro da área de jogo) em vez de janela modal em primeiro plano
 
 ---
 

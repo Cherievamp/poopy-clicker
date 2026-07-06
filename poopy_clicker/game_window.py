@@ -1902,36 +1902,44 @@ class Game(QWidget):
                   ["#ffd700", "#ff6b6b", "#6bcb77"], enabled=self.state.settings.get("show_particles", True))
 
     def _show_achievement_notification(self, achievements):
-        names = "\n".join(f"- {a[1]}: {a[2]}" for a in achievements)
-        plural = "Conquista" if len(achievements) == 1 else "Conquistas"
-        msg = f"{plural} desbloqueada(s)!\n\n{names}"
+        name = achievements[0][1]
+        desc = achievements[0][2]
+        plural = "Conquistas" if len(achievements) > 1 else "Conquista"
+        if len(achievements) > 1:
+            msg = f"🏆 {plural}!\n{name}: {desc}\ne mais {len(achievements) - 1} outra(s)"
+        else:
+            msg = f"🏆 {name}\n{desc}"
 
-        dialog = QDialog(self)
-        dialog.setWindowTitle("🏆 Conquista!")
-        dialog.resize(320, 200)
         theme = UI_THEMES.get(self.state.selected_ui_theme, UI_THEMES["default"])
-        dialog.setStyleSheet(f"background: {theme['bg']}; color: {theme['text']};")
-
-        layout = QVBoxLayout(dialog)
-        layout.setContentsMargins(16, 16, 16, 16)
-
-        label = QLabel(msg)
-        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        label.setWordWrap(True)
-        label.setStyleSheet(f"color: {theme['text']}; font-size: 12pt;")
-        layout.addWidget(label)
-
-        ok_btn = QPushButton("🎉 Legal!")
-        ok_btn.setMinimumHeight(36)
-        ok_btn.setStyleSheet(f"""
-            QPushButton {{ background: {theme['accent']}; color: {theme['bg']};
-                font-weight: bold; border: none; border-radius: 8px; }}
+        toast = QLabel(msg, self.play_area)
+        toast.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+        toast.setWordWrap(True)
+        toast.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        toast.setStyleSheet(f"""
+            background: {theme['accent']}; color: {theme['bg']};
+            font-size: 11pt; font-weight: bold; border-radius: 12px;
+            padding: 12px 18px;
         """)
-        ok_btn.clicked.connect(dialog.accept)
-        layout.addWidget(ok_btn)
+        toast.adjustSize()
+        tw = max(toast.width(), 200)
+        toast.setFixedWidth(min(tw, self.play_area.width() - 40))
+        toast.adjustSize()
+        x = (self.play_area.width() - toast.width()) // 2
+        toast.move(x, 20)
+        toast.show()
 
-        dialog.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
-        dialog.open()
+        anim = QPropertyAnimation(toast, b"pos", toast)
+        anim.setDuration(3000)
+        anim.setStartValue(QPoint(x, 20))
+        anim.setEndValue(QPoint(x, -toast.height()))
+        anim.setEasingCurve(QEasingCurve.Type.OutQuad)
+        anim.finished.connect(toast.deleteLater)
+        QTimer.singleShot(2000, anim.start)
+        QTimer.singleShot(2000, lambda: toast.setStyleSheet(f"""
+            background: {theme['accent']}; color: {theme['bg']};
+            font-size: 11pt; font-weight: bold; border-radius: 12px;
+            padding: 12px 18px;
+        """))
 
     def save(self):
         self.state.last_saved_at = time.time()
