@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Poopy Clicker
+Comment=Jogo de cliques com goobers
+Exec=poopy-clicker
+Icon=poopy-clicker
+Terminal=false
+Categories=Game;

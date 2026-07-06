@@ -1,7 +1,41 @@
-uhhhhhh, jogo yaaayyyy
+# Poopy Clicker
 
-tem o codigo inteiro se vc for doido e quiser ver oque tem dentro
+Jogo de cliques com goobers. Clique nos goobers, ganhe dinheiro, compre upgrades, desbloqueie habilidades e prestigie!
 
-tem o .zip pronto pra rodar no windows (usei o site py2exe.com pra fazer isso)
+## Instalação
 
-e tem o executavel pra linux
+### Linux — install.sh
+
+```bash
+git clone https://github.com/Cherievamp/poopy-clicker
+cd poopy-clicker
+chmod +x install.sh
+sudo ./install.sh
+```
+
+Aparece no menu de aplicativos como "Poopy Clicker".
+
+### Linux — pip (qualquer distro)
+
+```bash
+git clone https://github.com/Cherievamp/poopy-clicker
+cd poopy-clicker
+pip install .
+poopy-clicker
+```
+
+### Nix / NixOS
+
+```bash
+nix run github:Cherievamp/poopy-clicker
+```
+
+Ou adicione o flake à sua configuração.
+
+### Windows — instalador .exe
+
+Baixe `PoopyClicker_Setup.exe` da página de [releases](https://github.com/Cherievamp/poopy-clicker/releases) e execute.
+
+### Arch Linux — AUR
+
+*Em breve*
