@@ -34,7 +34,7 @@ Ou adicione o flake à sua configuração.
 
 ### Windows — instalador .exe
 
-Baixe `PoopyClicker_Setup.exe` da página de [releases](https://github.com/Cherievamp/poopy-clicker/releases) e execute.
+*Em breve*
 
 ### Arch Linux — AUR
 
