@@ -22,13 +22,7 @@ jobs:
           pip install pyinstaller
 
       - name: Build .exe with PyInstaller
-        run: |
-          pyinstaller --onefile --windowed ^
-            --add-data "poopy_clicker/assets;assets" ^
-            --hidden-import PyQt6.QtMultimedia ^
-            --hidden-import PyQt6.QtMultimediaWidgets ^
-            --collect-data poopy_clicker ^
-            main.py --name PoopyClicker
+        run: pyinstaller --onefile --windowed --add-data "poopy_clicker/assets;assets" --hidden-import PyQt6.QtMultimedia --hidden-import PyQt6.QtMultimediaWidgets --collect-data poopy_clicker main.py --name PoopyClicker
 
       - name: Install Inno Setup
         run: choco install innosetup --no-progress

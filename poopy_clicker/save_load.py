@@ -33,6 +33,7 @@ def _unprotect(encoded):
 
 def save_game(state):
     try:
+        os.makedirs(os.path.dirname(SAVE_PATH), exist_ok=True)
         json_bytes = json.dumps(state.to_dict()).encode("utf-8")
         tmp = SAVE_PATH + ".tmp"
         with open(tmp, "wb") as f:

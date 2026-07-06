@@ -60,7 +60,7 @@ class Goober(QLabel):
         self._setup_type()
 
         if self.max_hits > 1:
-            from constants import UI_THEMES
+            from .constants import UI_THEMES
             th = UI_THEMES.get(self.state.selected_ui_theme, UI_THEMES["default"])
             self.hp_bar = QProgressBar(self)
             self.hp_bar.setFixedHeight(6)

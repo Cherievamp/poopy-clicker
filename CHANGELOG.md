@@ -66,6 +66,9 @@
 
 ### 🐛 Correções
 - Corrigido `build-backend` no `pyproject.toml` (`setuptools.backends._legacy` → `setuptools.build_meta`) para instalação com versões recentes do setuptools/Python 3.14
+- Corrigido `import constants` em `goober.py` — faltava o `.` do relative import
+- Corrigido `save_load.py` — agora cria o diretório `~/.poopy-clicker/` antes de salvar
+- Corrigido `release.yml` — linha de continuação `^` removida (PowerShell não suporta)
 
 ---
 
