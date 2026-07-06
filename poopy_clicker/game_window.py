@@ -1,8 +1,12 @@
 import os
+import sys
 import random
 import time
 import math
+import json
+import webbrowser
 from collections import deque
+from urllib.request import urlopen, Request
 from PyQt6.QtWidgets import (
     QWidget, QPushButton, QLabel, QDialog, QProgressBar,
     QVBoxLayout, QHBoxLayout, QGridLayout, QScrollArea,
@@ -20,7 +24,7 @@ from .constants import (
     COLLECTION_REWARDS, _collection_unique_seen,
     _collection_unique_clicked, UI_THEMES, PERK_DEFS,
     AUTO_SAVE_INTERVAL_MS, RARITY_SPAWN_WEIGHT,
-    ACTIVE_SKILLS,
+    ACTIVE_SKILLS, VERSION, REPO,
 )
 from .game_state import GameState, ACHIEVEMENT_DEFS
 from .play_area import PlayArea
@@ -230,6 +234,7 @@ class Game(QWidget):
         QTimer.singleShot(0, self.load)
         QTimer.singleShot(200, lambda: [self.try_spawn_goober() for _ in range(2)])
         QTimer.singleShot(100, self.apply_ui_theme)
+        QTimer.singleShot(3000, self._check_updates)
 
     def _apply_theme_dict(self, theme, widget=None):
         target = widget or self
@@ -2210,6 +2215,104 @@ class Game(QWidget):
     def _end_coinburst(self):
         self._skill_coinburst_active = False
         self.show_floating_text("Explosão acabou", QPoint(self.play_area.width() // 2, 80), "#ffd166")
+
+    def _check_updates(self):
+        try:
+            req = Request(
+                f"https://api.github.com/repos/{REPO}/releases/latest",
+                headers={"User-Agent": "poopy-clicker", "Accept": "application/vnd.github.v3+json"},
+            )
+            resp = urlopen(req, timeout=5)
+            data = json.loads(resp.read().decode("utf-8"))
+            latest_tag = data.get("tag_name", "")
+            if not latest_tag or not latest_tag.startswith("v"):
+                return
+            latest_ver = latest_tag.lstrip("v")
+            current_ver = VERSION
+            if not self._is_newer(latest_ver, current_ver):
+                return
+            body = data.get("body", "")
+            assets = data.get("assets", [])
+            setup_asset = next(
+                (a for a in assets if "Setup" in a.get("name", "")),
+                None,
+            )
+            exe_asset = next(
+                (a for a in assets if a.get("name", "").endswith(".exe") and "Setup" not in a.get("name", "")),
+                None,
+            )
+            self._show_update_dialog(latest_tag, body, setup_asset, exe_asset)
+        except Exception:
+            pass
+
+    @staticmethod
+    def _is_newer(latest, current):
+        try:
+            lp = tuple(int(x) for x in latest.split("."))
+            cp = tuple(int(x) for x in current.split("."))
+            return lp > cp
+        except (ValueError, TypeError):
+            return False
+
+    def _show_update_dialog(self, tag, body, setup_asset, exe_asset):
+        dialog = QDialog(self)
+        dialog.setWindowTitle(f"Atualização disponível — {tag}")
+        dialog.resize(400, 320)
+        theme = UI_THEMES.get(self.state.selected_ui_theme, UI_THEMES["default"])
+        dialog.setStyleSheet(f"background: {theme['bg']}; color: {theme['text']};")
+
+        layout = QVBoxLayout(dialog)
+        layout.setSpacing(10)
+
+        title = QLabel(f'Nova versão <b>{tag}</b> disponível!')
+        title.setWordWrap(True)
+        title_font = QFont()
+        title_font.setPointSize(13)
+        title_font.setBold(True)
+        title.setFont(title_font)
+        layout.addWidget(title)
+
+        changelog = QLabel(body.replace("\n", "<br>"))
+        changelog.setWordWrap(True)
+        changelog_font = QFont()
+        changelog_font.setPointSize(9)
+        changelog.setFont(changelog_font)
+        scroll = QScrollArea()
+        scroll.setWidget(changelog)
+        scroll.setWidgetResizable(True)
+        scroll.setStyleSheet(f"background: {theme['panel']}; border: 1px solid {theme['accent']}; border-radius: 8px;")
+        layout.addWidget(scroll, 1)
+
+        btn_layout = QHBoxLayout()
+
+        later_btn = QPushButton("Agora não")
+        later_btn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        later_btn.clicked.connect(dialog.reject)
+        btn_layout.addWidget(later_btn)
+
+        is_frozen = getattr(sys, "frozen", False)
+        if is_frozen:
+            dl_url = None
+            dl_name = None
+            if setup_asset:
+                dl_url = setup_asset.get("browser_download_url")
+                dl_name = "Baixar instalador"
+            elif exe_asset:
+                dl_url = exe_asset.get("browser_download_url")
+                dl_name = "Baixar .exe"
+            if dl_url:
+                dl_btn = QPushButton(dl_name)
+                dl_btn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+                dl_btn.clicked.connect(lambda: webbrowser.open(dl_url))
+                btn_layout.addWidget(dl_btn)
+        else:
+            gh_btn = QPushButton("Abrir release no GitHub")
+            gh_btn.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+            gh_btn.clicked.connect(lambda: webbrowser.open(f"https://github.com/{REPO}/releases/tag/{tag}"))
+            btn_layout.addWidget(gh_btn)
+
+        layout.addLayout(btn_layout)
+        dialog.exec()
 
     def _tick_skill_cooldowns(self):
         changed = False

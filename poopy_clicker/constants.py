@@ -12,6 +12,9 @@ BASE_PATH = get_base_path()
 ASSET_PATH = os.path.join(BASE_PATH, "assets")
 SAVE_PATH = os.path.join(os.path.expanduser("~"), ".poopy-clicker", "save.json")
 
+VERSION = "1.1.0"
+REPO = "Cherievamp/poopy-clicker"
+
 MAX_GOOBERS = 10
 CLICK_SPAWN_THRESHOLD = 15
 PASSIVE_SPAWN_INTERVAL_MS = 12000

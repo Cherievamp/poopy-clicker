@@ -80,6 +80,13 @@
 
 ---
 
+## v1.1.0 (2026-07-06)
+
+### ✨ Novidades
+- **Auto-update**: ao iniciar, o jogo checa se há versão mais nova no GitHub e exibe um diálogo com link pra download
+
+---
+
 ## Anterior (fork original — por Julia-Link)
 
 ### Última versão (`Julia-Link/poopy-clicker`)
