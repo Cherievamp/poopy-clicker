@@ -39,3 +39,8 @@ Baixe `PoopyClicker_Setup.exe` da página de [releases](https://github.com/Cheri
 ### Arch Linux — AUR
 
 *Em breve*
+
+## Créditos
+
+- **Mafunky** (Cherievamp) — desenvolvimento principal, reescrita PyQt6, mecânicas, assets, som, packaging
+- **Julia-Link** — criação do jogo original em Tkinter, conceito inicial

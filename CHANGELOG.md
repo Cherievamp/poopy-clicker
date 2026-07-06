@@ -56,6 +56,10 @@
 - Diálogos não quebram ao fechar (try/except RuntimeError em widgets deletados)
 - Fechar a aba goober não quebra a descrição da loja secreta (labels separadas)
 
+### 👥 Créditos
+- **Mafunky** (Cherievamp) — desenvolvimento principal, reescrita PyQt6, mecânicas do jogo, assets, sons, packaging, distribuição
+- **Julia-Link** — criação do jogo original em Tkinter, conceito inicial, upgrades e save/load
+
 ---
 
 ## Anterior (fork original — por Julia-Link)
