@@ -58,7 +58,7 @@
 
 ### 👥 Créditos
 - **Mafunky** (Cherievamp) — desenvolvimento principal, reescrita PyQt6, mecânicas do jogo, assets, sons, packaging, distribuição
-- **Julia-Link** — criação do jogo original em Tkinter, conceito inicial, upgrades e save/load
+- **Julia-Link** — criação do jogo original em Tkinter, conceito inicial, upgrades e save/load, contribuição no código PyQt6, ensinou bastante sobre a biblioteca
 
 ---
 
